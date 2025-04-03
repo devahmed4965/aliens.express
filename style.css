@@ -7,7 +7,7 @@
 
 /* ---------- CSS Variables ---------- */
 :root {
-    --primary-color: #E50914; /* أحمر ساطع */
+    --primary-color: #E50914;
     --secondary-color: #B81D24;
     --dark-color: #141414;
     --dark-grey: #222222;
@@ -208,10 +208,6 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
     width: 100%;
 }
 
-.chat-link i, .login-link i {
-    margin-left: 5px;
-}
-
 .nav-toggle {
     display: none;
     background: none;
@@ -219,6 +215,12 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
     color: var(--white-color);
     font-size: 1.8rem;
     cursor: pointer;
+}
+
+/* ---------- Language Toggle ---------- */
+.lang-toggle {
+    /* عرض افتراضي لزر اللغة داخل الهيدر */
+    display: inline-block;
 }
 
 /* ---------- Hero Section ---------- */
@@ -474,19 +476,24 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
     font-size: 0.9rem;
 }
 
-/* ---------- Spinner ---------- */
+/* ---------- Spinner (Updated for Mobile) ---------- */
 .spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border-top: 4px solid var(--primary-color);
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
-    margin: 1rem auto 0 auto;
+    border-left-color: #09f;
+    -webkit-animation: spin 1s ease infinite;
+    animation: spin 1s ease infinite;
+    margin: 20px auto;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
 }
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* ---------- Responsive Design ---------- */
@@ -529,6 +536,12 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
   }
   .nav-link::after { display: none; }
   .nav-item:last-child .nav-link { border-bottom: none; }
+
+  /* عند عرض القائمة على الهاتف، تأكد من ظهور زر اللغة داخلها */
+  .nav-menu .lang-toggle {
+      text-align: center;
+      margin-top: 1rem;
+  }
 
   .hero-content h1 { font-size: clamp(2rem, 8vw, 3rem); }
   .hero-content .subtitle { font-size: clamp(1rem, 4vw, 1.2rem); }
@@ -815,7 +828,6 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
     text-align: left;
 }
 
-/* تعديل استجابة بسيط لنافذة الدردشة */
 @media (max-width: 400px) {
     .chat-widget {
         width: 90%;
@@ -836,3 +848,8 @@ p { margin-bottom: 1rem; color: var(--light-grey); }
   border-radius: 50%;
   object-fit: cover;
 }
+@media (min-width: 768px) {
+    .nav-menu {
+      display: flex !important;
+    }
+  }
