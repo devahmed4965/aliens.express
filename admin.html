@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المدير الشاملة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Admin-specific styles (consider moving to style.css or a separate admin.css) */
+        :root {
+            --primary-color: #0d6efd; /* Updated primary color */
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            color: var(--dark-color);
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.8em;
+        }
+
+        #logoutButton { /* Keeping logout button, assuming separate auth mechanism or placeholder */
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        #logoutButton:hover { background-color: #c82333; }
+
+        .admin-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .admin-section h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        /* Basic styling for placeholder sections */
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="text"], input[type="email"], input[type="file"], textarea, select {
+            width: calc(100% - 22px); padding: 10px; margin-bottom: 15px;
+            border: 1px solid #ccc; border-radius: 4px; font-size: 1em;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .save-button, .action-button {
+            color: white; padding: 10px 18px; border: none; border-radius: 4px;
+            cursor: pointer; font-size: 1em; transition: background-color 0.3s ease; margin-top: 10px;
+        }
+        .save-button { background-color: var(--success-color); }
+        .save-button:hover { background-color: #157347; }
+        .action-button { background-color: var(--danger-color); } /* Changed delete to danger */
+        .action-button:hover { background-color: #bb2d3b; }
+
+
+        /* Pickup Requests Table */
+        .requests-table-wrapper { overflow-x: auto; } /* Added wrapper for responsiveness */
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        .requests-table th, .requests-table td {
+            border: 1px solid #ddd;
+            padding: 12px 10px; /* Adjusted padding */
+            text-align: right;
+            vertical-align: middle;
+            font-size: 0.95em; /* Slightly smaller font */
+        }
+        .requests-table th {
+            background-color: var(--light-color);
+            font-weight: bold;
+            position: sticky; /* Optional: sticky header */
+            top: 0;
+        }
+        .requests-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .requests-table button {
+             padding: 6px 12px; /* Adjusted button padding */
+             font-size: 0.9em;
+             margin-right: 5px;
+             cursor: pointer;
+        }
+
+
+        .status-message {
+            margin-top: 15px; padding: 10px; border-radius: 4px; font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+        .status-message.success { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; display: block;}
+        .status-message.error { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; display: block;}
+        .status-message.info { background-color: #cff4fc; color: #055160; border: 1px solid #b6effb; display: block;}
+
+        .loading-spinner {
+            display: none; /* Hidden by default */
+            border: 3px solid #f3f3f3; /* Light grey */
+            border-top: 3px solid var(--primary-color); /* Blue */
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            margin-left: 8px; /* Spacing */
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .editable-group { margin-bottom: 20px; }
+
+        #loading { /* Style for the main loading indicator */
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2em;
+            color: var(--secondary-color);
+        }
+        #loading .loading-spinner { /* Make spinner visible when #loading is shown */
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-width: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-tachometer-alt"></i> لوحة تحكم المدير</h1>
+            <div>
+                 <span style="margin-left: 15px;">مرحباً!</span>
+                 </div>
+        </div>
+
+         <div class="admin-section">
+             <h2><i class="fas fa-edit"></i> تعديل محتوى الموقع (مثال)</h2>
+             <p><em>ملاحظة: تم إزالة منطق الحفظ المعتمد على Firebase. تحتاج هذه الأقسام إلى إعادة برمجة إذا أردت استخدامها.</em></p>
+             <div class="editable-group">
+                 <label for="edit-hero-title">عنوان القسم الرئيسي:</label>
+                 <textarea id="edit-hero-title" placeholder="مثال: عنوان الصفحة الرئيسية هنا..."></textarea>
+                 <button class="save-button" disabled><i class="fas fa-save"></i> حفظ</button>
+             </div>
+         </div>
+
+         <div class="admin-section">
+             <h2><i class="fas fa-file-excel"></i> تحديث حالات الشحنات (مثال)</h2>
+             <p><em>ملاحظة: تم إزالة منطق الرفع المعتمد على Firebase.</em></p>
+             <input type="file" id="excelFile" accept=".xlsx, .xls">
+             <button id="uploadExcelButton" class="save-button" style="background-color: var(--info-color);" disabled>
+                 <i class="fas fa-upload"></i> رفع وتحديث
+             </button>
+             <div class="status-message" id="upload-status"></div>
+         </div>
+         <div class="admin-section">
+            <h2><i class="fas fa-truck-pickup"></i> إدارة طلبات البيك اب</h2>
+             <button id="refreshPickupRequests" class="save-button" style="background-color: var(--secondary-color); margin-bottom: 15px;">
+                 <i class="fas fa-sync-alt"></i> تحديث القائمة
+                 <div class="loading-spinner" id="spinner-pickup-refresh"></div>
+             </button>
+            <div id="pickup-requests-container">
+                 <div id="loading" style="display: none;">
+                     <div class="loading-spinner"></div> جاري تحميل الطلبات...
+                 </div>
+                 <div class="requests-table-wrapper">
+                     <table class="requests-table" id="pickupRequestsTable" style="display: none;">
+                         <thead>
+                             <tr>
+                                 <th>تاريخ الطلب</th>
+                                 <th>الاسم</th>
+                                 <th>البريد الإلكتروني</th>
+                                 <th>الهاتف</th>
+                                 <th>عنوان الاستلام</th>
+                                 <th>عنوان التسليم</th>
+                                 <th>الوزن (كجم)</th>
+                                 <th>التفاصيل</th>
+                                 <th>إجراء</th>
+                             </tr>
+                         </thead>
+                         <tbody id="adminPickupTableBody">
+                             </tbody>
+                     </table>
+                 </div>
+                <p id="no-pickup-requests" style="display: none; text-align: center; padding: 20px;">لا توجد طلبات بيك اب حالياً.</p>
+            </div>
+            <div class="status-message" id="pickup-update-status"></div>
+        </div>
+
+        <div class="admin-section">
+             <h2><i class="fas fa-cog"></i> الإعدادات العامة (مثال)</h2>
+              <p><em>ملاحظة: تم إزالة منطق الحفظ المعتمد على Firebase.</em></p>
+             <div class="editable-group">
+                 <label for="pickupAdminEmail">إيميل استلام الإشعارات:</label>
+                 <input type="email" id="pickupAdminEmail" placeholder="admin@example.com">
+                 <button id="saveAdminEmailButton" class="save-button" disabled>
+                     <i class="fas fa-envelope"></i> حفظ الإيميل
+                 </button>
+                 <div class="status-message" id="admin-email-status"></div>
+             </div>
+         </div>
+        </div>
+
+    <script src="js/script.js"></script>
+
+    </body>
+</html>

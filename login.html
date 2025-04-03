@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - Aliens Express</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* أنماط صفحة تسجيل الدخول */
+    body.login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #111;
+    }
+    .login-container {
+      background-color: #222;
+      padding: 40px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-container img {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+    .login-container h2 {
+      color: #E50914;
+      margin-bottom: 25px;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 1px solid #444;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .login-form input:focus {
+      outline: none;
+      border-color: #E50914;
+    }
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #E50914;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .login-form button:hover {
+      background-color: #b81d24;
+    }
+    #login-error {
+      color: #E50914;
+      margin-top: 15px;
+      font-weight: bold;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <img src="assets/logo-white.png" alt="Aliens Express Logo">
+    <h2>تسجيل دخول المدير</h2>
+    <form id="loginForm" class="login-form">
+      <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="login-password" placeholder="كلمة المرور" required>
+      <button type="submit" id="login-button">تسجيل الدخول</button>
+      <p id="login-error"></p>
+    </form>
+  </div>
+
+  <!-- استيراد إعدادات Firebase -->
+  <script type="module" src="./firebase/firebase-config.js"></script>
+  <!-- كود تسجيل الدخول -->
+  <script type="module">
+    // استيراد متغير auth من إعدادات Firebase
+    import { auth } from './firebase/firebase-config.js';
+    // استيراد دالة تسجيل الدخول من Firebase Authentication
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('login-error');
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // في حال تسجيل الدخول بنجاح، إعادة التوجيه إلى لوحة التحكم
+          window.location.href = 'admin.html';
+        })
+        .catch((error) => {
+          // عرض رسالة الخطأ للمستخدم
+          loginError.textContent = error.message;
+        });
+    });
+  </script>
+</body>
+</html>
