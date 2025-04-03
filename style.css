@@ -1,0 +1,838 @@
+/* =============================================================
+   ملف style.css - تصميم عصري وتفاعلي لموقع Aliens Express
+   ============================================================= */
+
+/* ---------- Google Font ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+/* ---------- CSS Variables ---------- */
+:root {
+    --primary-color: #E50914; /* أحمر ساطع */
+    --secondary-color: #B81D24;
+    --dark-color: #141414;
+    --dark-grey: #222222;
+    --light-grey: #aaaaaa;
+    --white-color: #ffffff;
+    --black-color: #000000;
+
+    --font-family: 'Cairo', sans-serif;
+    --base-font-size: 16px;
+    --transition-speed: 0.3s ease;
+    --border-radius: 8px;
+    --container-width: 1140px;
+    --section-padding: 80px 0;
+}
+
+/* ---------- Base & Reset ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: var(--base-font-size);
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    line-height: 1.7;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.25rem; color: var(--primary-color); }
+h3 { font-size: 1.5rem; }
+p { margin-bottom: 1rem; color: var(--light-grey); }
+
+/* ---------- Utility Classes ---------- */
+.container {
+    width: 90%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.section-padding {
+    padding: var(--section-padding);
+}
+
+.alt-bg {
+    background-color: var(--dark-grey);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.text-center { text-align: center; }
+.section-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 2.5rem auto;
+    color: var(--light-grey);
+    font-size: 1.1rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--white-color);
+    border: 2px solid var(--primary-color);
+}
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform: translateY(-3px);
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.btn-icon i {
+    font-size: 1.1em;
+}
+
+/* ---------- Header & Navbar ---------- */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    padding: 0.8rem 0;
+}
+.site-header.scrolled {
+    background-color: rgba(20, 20, 20, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand .logo {
+    height: 45px;
+    width: auto;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--white-color);
+    font-weight: 400;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color var(--transition-speed);
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width var(--transition-speed);
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color);
+}
+.nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+}
+
+.chat-link i, .login-link i {
+    margin-left: 5px;
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white-color);
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+/* ---------- Hero Section ---------- */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    color: var(--white-color);
+}
+.hero-video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+#heroVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8));
+    z-index: -1;
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+.hero-content h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--white-color);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+.hero-content .subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: white;
+    margin-bottom: 2.5rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
+.hero-cta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* ---------- Forms (Tracking & Pickup) ---------- */
+.input-group {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.input-group input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    padding: 1rem 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--white-color);
+    font-size: 1rem;
+    outline: none;
+}
+.input-group button {
+    border-radius: 0;
+    padding: 1rem 2rem;
+}
+
+.pickup-form {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pickup-form input,
+.pickup-form textarea {
+    width: 100%;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    color: var(--white-color);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color var(--transition-speed);
+}
+.pickup-form input:focus,
+.pickup-form textarea:focus {
+    border-color: var(--primary-color);
+}
+.pickup-form textarea {
+    resize: vertical;
+    grid-column: 1 / -1;
+}
+.pickup-form button {
+    margin-top: 1rem;
+}
+
+/* ---------- Tracking Result ---------- */
+.tracking-result {
+    margin-top: 2rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--primary-color);
+}
+.tracking-status h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+.tracking-status p {
+    color: var(--light-grey);
+    margin-bottom: 0.3rem;
+}
+.tracking-result .error {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* ---------- Services Section ---------- */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+.service-card {
+    background-color: var(--dark-grey);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+.service-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+.service-card h3 {
+    color: var(--white-color);
+    margin-bottom: 0.8rem;
+}
+
+/* ---------- About Section ---------- */
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+.about-content ul {
+    margin-top: 1.5rem;
+    padding-right: 0;
+}
+.about-content ul li {
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.about-content ul li i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+.about-image img {
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    background-color: var(--black-color);
+    color: var(--light-grey);
+    padding-top: 4rem;
+}
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+}
+.footer-logo {
+    height: 40px;
+    margin-bottom: 1rem;
+}
+.footer-about p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+.social-links a {
+    color: var(--light-grey);
+    font-size: 1.3rem;
+    margin-left: 1rem;
+    transition: color var(--transition-speed), transform var(--transition-speed);
+}
+.social-links a:hover {
+    color: var(--primary-color);
+    transform: scale(1.2);
+}
+.footer-links h4, .footer-contact h4 {
+    color: var(--white-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+.footer-links ul li, .footer-contact ul li {
+    margin-bottom: 0.8rem;
+}
+.footer-links ul li a, .footer-contact ul li a {
+    color: var(--light-grey);
+    font-size: 0.9rem;
+}
+.footer-links ul li a:hover, .footer-contact ul li a:hover {
+    color: var(--white-color);
+    padding-right: 5px;
+}
+.footer-contact ul li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.footer-contact ul li i {
+    color: var(--primary-color);
+}
+.footer-bottom {
+    text-align: center;
+    padding-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary-color);
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 1rem auto 0 auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 992px) {
+    :root { --section-padding: 60px 0; }
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    .about-content { grid-template-columns: 1fr; }
+    .about-image { order: -1; margin-bottom: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  .nav-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 100%;
+      background-color: var(--dark-grey);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 1rem 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), padding 0.3s ease;
+  }
+  .nav-menu.active {
+      max-height: 500px;
+      padding: 1rem 0;
+  }
+  .nav-item {
+      width: 100%;
+      text-align: center;
+  }
+  .nav-link {
+      display: block;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .nav-link::after { display: none; }
+  .nav-item:last-child .nav-link { border-bottom: none; }
+
+  .hero-content h1 { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-content .subtitle { font-size: clamp(1rem, 4vw, 1.2rem); }
+  .hero-cta { flex-direction: column; gap: 1rem; align-items: center; }
+  .btn { width: 80%; max-width: 300px; }
+
+  .footer-content { grid-template-columns: 1fr; text-align: center; }
+  .social-links { margin-top: 1rem; }
+  .footer-about, .footer-links, .footer-contact {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+  }
+  .footer-links ul, .footer-contact ul {
+      padding-right: 0;
+  }
+  .dark-form .btn-submit {
+    margin-right: 22px;
+  }
+
+  .tracking-section .input-group button {
+    padding: 0.8rem 0.3rem;
+    font-size: 0.9rem;
+    width: 100%;
+  }
+}
+
+/* ---------- Custom Animation (Pulse) ---------- */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* ---------- Additional Form Status Styles ---------- */
+.processing { background: #fff3cd; color: #856404; padding: 15px; }
+.success { background: #d4edda; color: #155724; padding: 15px; }
+.error { background: #f8d7da; color: #721c24; padding: 15px; }
+
+/* ---------- Pickup Section ---------- */
+.pickup-section {
+  background-color: #1b1b1b;
+  color: #ffffff;
+  padding: 60px 0;
+}
+
+.pickup-section .section-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.pickup-section .section-subtitle {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #cccccc;
+}
+
+/* ---------- Dark Form ---------- */
+.dark-form {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #2b2b2b;
+  border-radius: 8px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.dark-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.dark-form .form-group {
+  flex: 1 1 calc(50% - 20px);
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-form .form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.dark-form input,
+.dark-form textarea {
+  background-color: #3c3c3c;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.dark-form input::placeholder,
+.dark-form textarea::placeholder {
+  color: #aaa;
+}
+
+.dark-form input:focus,
+.dark-form textarea:focus {
+  border-color: #ff3b3b;
+}
+
+.dark-form textarea {
+  resize: vertical;
+  grid-column: 1 / -1;
+}
+
+.dark-form .btn-submit {
+  background-color: #ff3b3b;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.dark-form .btn-submit i {
+  margin-left: 8px;
+}
+
+.dark-form .btn-submit:hover {
+  background-color: #e32f2f;
+}
+
+/* ---------- Chat Widget Styles ---------- */
+.chat-toggle-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.chat-toggle-button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.1);
+}
+.chat-toggle-button .close-icon {
+    font-size: 1.6rem;
+}
+
+.chat-widget {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 340px;
+    max-height: 480px;
+    background-color: var(--dark-grey);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.chat-widget.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.chat-header {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 0.8rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.chat-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.chat-close-btn {
+    background: none;
+    border: none;
+    color: var(--white-color);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity var(--transition-speed);
+}
+.chat-close-btn:hover {
+    opacity: 1;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-messages::-webkit-scrollbar-track {
+  background: var(--dark-grey);
+}
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.6rem 1rem;
+    border-radius: 15px;
+    line-height: 1.4;
+    position: relative;
+}
+.message p {
+    margin: 0;
+    word-wrap: break-word;
+}
+.message .timestamp {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--light-grey);
+    opacity: 0.7;
+    margin-top: 0.3rem;
+    text-align: left;
+}
+
+.message.bot {
+    background-color: var(--dark-grey);
+    color: var(--white-color);
+    border-bottom-right-radius: 3px;
+    align-self: flex-start;
+}
+.message.bot .timestamp {
+    text-align: right;
+}
+
+.message.user {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-bottom-left-radius: 3px;
+    align-self: flex-end;
+}
+.message.user .timestamp {
+    text-align: left;
+}
+
+/* تعديل استجابة بسيط لنافذة الدردشة */
+@media (max-width: 400px) {
+    .chat-widget {
+        width: 90%;
+        right: 5%;
+        bottom: 80px;
+    }
+    .chat-toggle-button {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+.chat-messages .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
