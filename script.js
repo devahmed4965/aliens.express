@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
       footerText: "شحن سريع وموثوق يصل إلى كل مكان.",
       quickLinks: "روابط سريعة",
       contactUs: "تواصل معنا",
-      address: "مصر - البحيرة - دمنهور",
+      address: "عنوان الشركة، المدينة، الدولة",
       privacy: "سياسة الخصوصية",
       terms: "شروط الاستخدام",
       rights: "جميع الحقوق محفوظة.",
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       footerText: "Fast and reliable shipping anywhere.",
       quickLinks: "Quick Links",
       contactUs: "Contact Us",
-      address: "Egypt - Elbehera - Damanhour",
+      address: "Company Address, City, Country",
       privacy: "Privacy Policy",
       terms: "Terms of Use",
       rights: "All rights reserved.",
@@ -146,68 +146,79 @@ document.addEventListener('DOMContentLoaded', () => {
      Tracking System (GET)
   ==================================================== */
   const trackingForm = document.getElementById('trackingForm');
-  const trackingResultDiv = document.getElementById('trackingResult');
-  const trackingSpinner = document.getElementById('trackingSpinner');
+const trackingResultDiv = document.getElementById('trackingResult');
+const trackingSpinner = document.getElementById('trackingSpinner');
 
-  if (trackingForm && trackingResultDiv) {
-    const trackingInput = document.getElementById('trackingInput');
-    const trackingScriptBaseURL = 'https://script.google.com/macros/s/AKfycbwSuZ_TRV8VQWGv-W1nRG1gqr3c3ToFEBwAwJofCC1glQr4b4wYSRRSkg8DpzFW6tg/exec';
-    // تأكد من إخفاء نتيجة التتبع مبدئيًا
+if (trackingForm && trackingResultDiv) {
+  const trackingInput = document.getElementById('trackingInput');
+  const trackingScriptBaseURL = 'https://script.google.com/macros/s/AKfycbzHHmmLDQIQZ-Tzm544AHlYaWfuXuV_a-4tqt-SNYH_S8Slscq6TYKGJPbOKkVUBxIASQ/exec';
+
+  // إخفاء نتيجة التتبع مبدئيًا
+  trackingResultDiv.classList.add('hidden');
+
+  trackingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const trackingNumber = trackingInput ? trackingInput.value.trim() : '';
+    if (!trackingNumber) {
+      trackingResultDiv.innerHTML = `<p class='error' style='color: red; margin-top: 10px;'>⚠️ الرجاء إدخال رقم التتبع.</p>`;
+      trackingResultDiv.classList.remove('hidden');
+      return;
+    }
+    showSpinner(trackingSpinner);
     trackingResultDiv.classList.add('hidden');
+    trackingResultDiv.innerHTML = '';
 
-    trackingForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const trackingNumber = trackingInput ? trackingInput.value.trim() : '';
-      if (!trackingNumber) {
-        trackingResultDiv.innerHTML = "<p class='error' style='color: red; margin-top: 10px;'>⚠️ الرجاء إدخال رقم التتبع.</p>";
-        trackingResultDiv.classList.remove('hidden');
-        return;
+    try {
+      const url = `${trackingScriptBaseURL}?action=getTrackingData&trackingNumber=${encodeURIComponent(trackingNumber)}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`فشل الاتصال بالخادم: ${response.status} ${response.statusText}`);
       }
-      showSpinner(trackingSpinner);
-      trackingResultDiv.classList.add('hidden');
-      trackingResultDiv.innerHTML = '';
+      const result = await response.json();
+      if (result.result === 'success' && result.data && result.data.length > 0) {
+        // ترتيب النتائج بناءً على التاريخ والوقت (الأحدث أولاً)
+        result.data.sort((a, b) => {
+          const dateA = new Date(`${a["تاريخ التغيير"]} ${a["وقت التغيير"]}`);
+          const dateB = new Date(`${b["تاريخ التغيير"]} ${b["وقت التغيير"]}`);
+          return dateB - dateA;
+        });
 
-      try {
-        const url = `${trackingScriptBaseURL}?action=getTrackingData&trackingNumber=${encodeURIComponent(trackingNumber)}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`فشل الاتصال بالخادم: ${response.status} ${response.statusText}`);
-        }
-        const result = await response.json();
-        if (result.result === 'success' && result.data && result.data.length > 0) {
-          result.data.sort((a, b) => new Date(b.LastUpdate) - new Date(a.LastUpdate));
-          const latest = result.data[0];
-          let shippingStatus = latest.Status || 'غير متوفر';
+        let html = "";
+        result.data.forEach(update => {
+          let shippingStatus = update["الحالة"] || 'غير متوفر';
           if (shippingStatus.trim().toLowerCase() === 'hold to be returned') {
             shippingStatus = 'فى مخزن المرتجعات';
           } else if (shippingStatus.trim().toLowerCase() === 'جاري التوصيل') {
             shippingStatus = 'الشحنة خرجت للتوصيل';
           }
-          trackingResultDiv.innerHTML = `
+
+          html += `
             <div class="tracking-status" style="margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
-              <p><strong>رقم البوليصة:</strong> ${latest.PolicyNumber || 'غير متوفر'}</p>
+              <p><strong>رقم الشحنة:</strong> ${update["رقم الشحنة"] || 'غير متوفر'}</p>
+              <p><strong>العنوان:</strong> ${update["عنوان 1"] || 'غير متوفر'}</p>
               <p><strong>حالة الشحنة:</strong> ${shippingStatus}</p>
-              <p><strong>آخر تحديث:</strong> ${latest.LastUpdate ? new Date(latest.LastUpdate).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : 'غير متوفر'}</p>
-              <p><strong>الموقع الحالي:</strong> ${latest.Location || 'غير متوفر'}</p>
-              <p><strong>التسليم المتوقع:</strong> ${latest.EstimatedDelivery || 'غير محدد'}</p>
-              <p><strong>اسم الشركة:</strong> ${latest.CompanyName || 'غير متوفر'}</p>
+              <p><strong>تاريخ التغيير:</strong> ${update["تاريخ التغيير"] || 'غير متوفر'}</p>
+              <p><strong>وقت التغيير:</strong> ${update["وقت التغيير"] || 'غير متوفر'}</p>
             </div>
           `;
-        } else if (result.result === 'success') {
-          trackingResultDiv.innerHTML = `<p class='info' style='color: orange; margin-top: 10px;'>لم يتم العثور على بيانات للشحنة رقم: ${trackingNumber}</p>`;
-        } else {
-          trackingResultDiv.innerHTML = `<p class='error' style='color: red; margin-top: 10px;'>خطأ: ${result.message || 'خطأ غير معروف'}</p>`;
-        }
-        trackingResultDiv.classList.remove('hidden');
-      } catch (error) {
-        console.error('Tracking Error:', error);
-        trackingResultDiv.innerHTML = `<p class='error' style='color: red; margin-top: 10px;'>حدث خطأ أثناء تتبع الشحنة (${error.message})</p>`;
-        trackingResultDiv.classList.remove('hidden');
-      } finally {
-        hideSpinner(trackingSpinner);
+        });
+        trackingResultDiv.innerHTML = html;
+      } else if (result.result === 'success') {
+        trackingResultDiv.innerHTML = `<p class='info' style='color: orange; margin-top: 10px;'>لم يتم العثور على بيانات للشحنة رقم: ${trackingNumber}</p>`;
+      } else {
+        trackingResultDiv.innerHTML = `<p class='error' style='color: red; margin-top: 10px;'>خطأ: ${result.message || 'خطأ غير معروف'}</p>`;
       }
-    });
-  }
+      trackingResultDiv.classList.remove('hidden');
+    } catch (error) {
+      console.error('Tracking Error:', error);
+      trackingResultDiv.innerHTML = `<p class='error' style='color: red; margin-top: 10px;'>حدث خطأ أثناء تتبع الشحنة (${error.message})</p>`;
+      trackingResultDiv.classList.remove('hidden');
+    } finally {
+      hideSpinner(trackingSpinner);
+    }
+  });
+}
+
 
   /* ====================================================
      Pickup System (POST)
