@@ -13,130 +13,104 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" /> 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-  
   <style>
-    /* تأثيرات الأنميشن المخصصة */
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    .pulse {
-      animation: pulse 2s infinite;
-    }
+    /* على شاشات الكمبيوتر (أكبر من 768 بكسل) تظهر القائمة دائمًا */
+@media (min-width: 768px) {
+  .nav-menu {
+    display: flex !important;
+  }
+}
 
-    /* بعض التنسيقات الإضافية الخاصة بالأقسام والرسائل */
-    .form-status {
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      text-align: center;
-    }
-    .processing {
-      background: #fff3cd;
-      color: #856404;
-    }
-    .success-message {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px;
-      border-radius: 4px;
-    }
-    .error-message {
-      background: #f8d7da;
-      color: #721c24;
-      padding: 10px;
-      border-radius: 4px;
-    }
-    .fa-check-circle, .fa-exclamation-triangle {
-      margin-left: 5px;
-    }
-    .spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border-left-color: #09f;
-      animation: spin 1s ease infinite;
-      margin: 20px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .hidden { display: none; }
+/* على شاشات الهاتف (أقل من 768 بكسل) تخفي القائمة افتراضياً */
+@media (max-width: 767px) {
+  .nav-menu {
+    display: none;
+  }
+  /* عند تفعيل القائمة يُضاف لها كلاس "active" */
+  .nav-menu.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    background-color: var(--dark-grey);
+    padding: 1rem 0;
+    z-index: 999;
+  }
+}
 
-    /* تحسين التجاوب */
-    @media (max-width: 768px) {
-        .about-content {
-            flex-direction: column;
-            text-align: center;
-        }
-        .about-image {
-            margin-top: 30px;
-        }
-        .about-content > div[data-aos] {
-            transform: none !important;
-            opacity: 1 !important;
-        }
-        .about-content > div {
-            animation-name: aos-fade-up !important;
-        }
-    }
   </style>
 </head>
 <body>
-
   <header class="site-header" data-aos="fade-down" data-aos-duration="1000">
     <nav class="navbar container">
       <a href="#" class="navbar-brand pulse" data-aos="zoom-in" data-aos-delay="200">
-        <img src="logo.png" alt="شعار Aliens Express" class="logo">
+        <img src="assets/logo.png" alt="شعار Aliens Express" class="logo">
       </a>
       <button class="nav-toggle" aria-label="Toggle navigation" data-aos="fade-left" data-aos-delay="300">
         <i class="fas fa-bars"></i>
       </button>
-      <ul class="nav-menu" data-aos="fade-right" data-aos-delay="400">
-        <li class="nav-item"><a href="#hero" class="nav-link">الرئيسية</a></li>
-        <li class="nav-item"><a href="#tracking" class="nav-link">تتبع الشحنة</a></li>
-        <li class="nav-item"><a href="#pickup" class="nav-link">حجز بيك اب</a></li>
-        <li class="nav-item"><a href="#services" class="nav-link">خدماتنا</a></li>
-        <li class="nav-item"><a href="#about" class="nav-link">من نحن</a></li>
-        <li class="nav-item"><a href="login.html" class="nav-link login-link"><i class="fas fa-sign-in-alt"></i> دخول</a></li>
+      <!-- قائمة التنقل مع خيار اللغة (تم إزالة فئة hidden) -->
+      <ul class="nav-menu" data-aos="fade-up" data-aos-delay="400">
+        <li class="nav-item"><a href="#hero" class="nav-link" data-key="home">الرئيسية</a></li>
+        <li class="nav-item"><a href="#tracking" class="nav-link" data-key="tracking">تتبع الشحنة</a></li>
+        <li class="nav-item"><a href="#pickup" class="nav-link" data-key="pickup">حجز بيك اب</a></li>
+        <li class="nav-item"><a href="#services" class="nav-link" data-key="services">خدماتنا</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link" data-key="about">من نحن</a></li>
+        <li class="nav-item"><a href="login.html" class="nav-link login-link" data-key="login">
+            <i class="fas fa-sign-in-alt"></i> دخول
+        </a></li>
+        <!-- خيار اللغة مضاف ضمن عناصر القائمة -->
+        <li class="nav-item lang-item">
+            <button id="toggleLang" class="btn btn-secondary">EN</button>
+        </li>
       </ul>
     </nav>
   </header>
+  
+  
 
   <main>
     <section id="hero" class="hero">
       <div class="hero-video-wrapper">
-        <video autoplay muted loop playsinline id="heroVideo" poster="company.mp4">
-          <source src="company.mp4" type="video/mp4">
+        <video autoplay muted loop playsinline id="heroVideo" poster="assets/company.mp4">
+          <source src="assets/company.mp4" type="video/mp4">
           متصفحك لا يدعم عرض الفيديو.
         </video>
         <div class="hero-overlay" data-aos="fade" data-aos-duration="1500"></div>
       </div>
       <div class="hero-content container" data-aos="fade-up" data-aos-duration="1200">
-            <h1>Aliens Express</h1>
-            <p class="subtitle">With Light's Speed.</p>
-            <div class="hero-cta" data-aos="fade-up" data-aos-delay="200">
-                <a href="#tracking" class="btn btn-primary btn-icon"><i class="fas fa-search-location"></i> تتبع شحنتك الآن</a>
-                <a href="#pickup" class="btn btn-secondary btn-icon"><i class="fas fa-shipping-fast"></i> اطلب خدمة البيك اب</a>
-            </div>
+        <h1 data-key="title">Aliens Express</h1>
+        <p class="subtitle" data-key="subtitle">With Light's Speed.</p>
+        <div class="hero-cta" data-aos="fade-up" data-aos-delay="200">
+          <a href="#tracking" class="btn btn-primary btn-icon">
+            <i class="fas fa-search-location"></i>
+            <span data-key="trackNow">تتبع شحنتك الآن</span>
+          </a>
+          <a href="#pickup" class="btn btn-secondary btn-icon">
+            <i class="fas fa-shipping-fast"></i>
+            <span data-key="bookPickup">اطلب خدمة البيك اب</span>
+          </a>
+        </div>
       </div>
     </section>
 
     <section id="tracking" class="tracking-section section-padding">
       <div class="container">
-        <h2 data-aos="fade-up">تتبع شحنتك بسهولة</h2>
+        <h2 data-aos="fade-up" data-key="trackingTitle">تتبع شحنتك بسهولة</h2>
         <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
           أدخل رقم التتبع الخاص بك لمعرفة حالة الشحنة لحظة بلحظة.
         </p>
         <form id="trackingForm" class="tracking-form" data-aos="fade-up" data-aos-delay="200">
           <div class="input-group">
             <input type="text" id="trackingInput" placeholder="أدخل رقم التتبع هنا..." required>
-            <button type="submit" class="btn btn-primary btn-icon"><i class="fas fa-search"></i> تتبع</button>
+            <button type="submit" class="btn btn-primary btn-icon">
+              <i class="fas fa-search"></i>
+              <span data-key="track">تتبع</span>
+            </button>
           </div>
           <div id="trackingSpinner" class="spinner hidden"></div>
         </form>
@@ -146,7 +120,7 @@
 
     <section id="pickup" class="pickup-section section-padding alt-bg">
       <div class="container">
-        <h2 class="section-title" data-aos="fade-up">احجز خدمة البيك اب</h2>
+        <h2 class="section-title" data-aos="fade-up" data-key="pickupTitle">احجز خدمة البيك اب</h2>
         <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
           دعنا نأتي إليك لاستلام شحنتك. املأ النموذج وسنتواصل معك.
         </p>
@@ -172,7 +146,7 @@
             </div>
           </div>
           <div class="form-row">
-             <div class="form-group" data-aos="fade-up" data-aos-delay="450">
+            <div class="form-group" data-aos="fade-up" data-aos-delay="450">
               <label for="deliveryAddress">عنوان التسليم</label>
               <input type="text" id="deliveryAddress" name="DeliveryAddress" placeholder="أدخل عنوان التسليم" required>
             </div>
@@ -185,7 +159,9 @@
             <label for="details">وصف موجز للشحنة</label>
             <textarea id="details" name="Details" rows="3" placeholder="أدخل وصف الشحنة"></textarea>
           </div>
-          <button type="submit" class="btn-submit" data-aos="fade-up" data-aos-delay="600"><i class="fas fa-paper-plane"></i> إرسال طلب البيك اب</button>
+          <button type="submit" class="btn-submit" data-aos="fade-up" data-aos-delay="600">
+            <i class="fas fa-paper-plane"></i> إرسال طلب البيك اب
+          </button>
           <div id="pickupFormStatus" class="form-status" style="margin-top: 15px;"></div>
         </form>
       </div>
@@ -193,7 +169,7 @@
 
     <section id="services" class="services-section section-padding">
       <div class="container">
-        <h2 data-aos="fade-up">خدماتنا المتكاملة</h2>
+        <h2 data-aos="fade-up" data-key="servicesTitle">خدماتنا المتكاملة</h2>
         <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
           نقدم مجموعة واسعة من حلول الشحن لتلبية كافة احتياجاتك.
         </p>
@@ -225,7 +201,7 @@
     <section id="about" class="about-section section-padding alt-bg">
       <div class="container about-content">
         <div data-aos="fade-left">
-          <h2>لماذا تختار Aliens Express؟</h2>
+          <h2 data-aos="fade-up" data-key="aboutTitle">لماذا تختار Aliens Express?</h2>
           <p>
             نحن في Aliens Express نقدم أكثر من مجرد خدمات شحن؛ نحن شركاؤك في النجاح. نضمن لك تجربة شحن سلسة، آمنة، وسريعة باستخدام أحدث التقنيات. نسعى دائمًا لتوفير حلول مخصصة لتلبية احتياجات كل عميل.
           </p>
@@ -234,12 +210,11 @@
             <li><i class="fas fa-check-circle"></i> أمان تام لشحناتك</li>
             <li><i class="fas fa-check-circle"></i> تتبع مباشر ودقيق</li>
             <li><i class="fas fa-check-circle"></i> دعم فني على مدار الساعة</li>
-            <li><i class="fas fa-check-circle"></i>   خدمة عملاء متميزة</li>
-
+            <li><i class="fas fa-check-circle"></i> خدمة عملاء متميزة</li>
           </ul>
         </div>
-        <div class="about-image" data-aos="fade-right">
-          <img src="logo.png" alt="شعار Aliens Express">
+        <div class="about-image" data-aos="fade-up">
+          <img src="assets/logo.png" alt="شعار Aliens Express">
         </div>
       </div>
     </section>
@@ -248,8 +223,8 @@
   <footer class="site-footer">
     <div class="container footer-content">
       <div class="footer-about" data-aos="fade-up">
-        <img src="logo.png" alt="شعار Aliens Express" class="footer-logo">
-        <p>شحن سريع وموثوق يصل إلى كل مكان.</p>
+        <img src="assets/logo.png" alt="شعار Aliens Express" class="footer-logo">
+        <p data-aos="fade-up" data-key="footerText">شحن سريع وموثوق يصل إلى كل مكان.</p>
         <div class="social-links">
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
           <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -258,31 +233,31 @@
         </div>
       </div>
       <div class="footer-links" data-aos="fade-up" data-aos-delay="100">
-        <h4>روابط سريعة</h4>
+        <h4 data-key="quickLinks">روابط سريعة</h4>
         <ul>
-          <li><a href="#tracking">تتبع الشحنة</a></li>
-          <li><a href="#pickup">حجز بيك اب</a></li>
-          <li><a href="#services">خدماتنا</a></li>
-          <li><a href="#">سياسة الخصوصية</a></li>
-          <li><a href="#">شروط الاستخدام</a></li>
+          <li><a href="#tracking" data-key="tracking">تتبع الشحنة</a></li>
+          <li><a href="#pickup" data-key="pickup">حجز بيك اب</a></li>
+          <li><a href="#services" data-key="services">خدماتنا</a></li>
+          <li><a href="#" data-key="privacy">سياسة الخصوصية</a></li>
+          <li><a href="#" data-key="terms">شروط الاستخدام</a></li>
         </ul>
       </div>
       <div class="footer-contact" data-aos="fade-up" data-aos-delay="200">
-        <h4>تواصل معنا</h4>
+        <h4 data-key="contactUs">تواصل معنا</h4>
         <ul>
-          <li><i class="fas fa-map-marker-alt"></i> عنوان الشركة، المدينة، الدولة</li>
+          <li><i class="fas fa-map-marker-alt"></i> <span data-key="address">Egypt , elbehira ,Damanhour</span></li>
           <li><i class="fas fa-phone"></i> <a href="tel:+201234567890">+20 123 456 7890</a></li>
           <li><i class="fas fa-envelope"></i> <a href="mailto:info@aliensexpress.com">info@aliensexpress.com</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 Aliens Express. جميع الحقوق محفوظة.</p>
+      <p>&copy; 2025 Aliens Express. <span data-key="rights">جميع الحقوق محفوظة.</span></p>
     </div>
   </footer>
 
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script> 
-  <script src="script.js"></script>
+  <script src="/js/script.js"></script>
   <script src="//code.tidio.co/qktkptzhfxdbwgdfrypd4ollw9esmgvp.js" async></script>
 </body>
 </html>
